@@ -1,0 +1,49 @@
+
+?start: expr
+
+?expr: atom | array
+
+array: "[" expr* "]"
+
+atom: CNAME 
+    | SIGNED_FLOAT -> floating
+    | SIGNED_INT -> integer
+    | ESCAPED_STRING -> string 
+    | OPERATOR
+
+// Digits and Letters
+DIGIT: /[0-9]/
+LCASE_LETTER: /[a-z]/
+UCASE_LETTER: /[A-Z]/
+
+// Opetators
+OPERATOR: /[\-+*=<>\/]+/
+
+// Letters
+LETTER: UCASE_LETTER | LCASE_LETTER
+WORD: LETTER+
+CNAME: ("_"|LETTER) ("_"|LETTER|DIGIT)*
+
+// Strings
+_STRING_INNER: /.*?/
+_STRING_ESC_INNER: _STRING_INNER /(?<!\\)(\\\\)*?/
+ESCAPED_STRING : "\"" _STRING_ESC_INNER "\""
+
+// Numbers
+INT: DIGIT+
+SIGNED_INT: /[+-]?/ INT
+DECIMAL: INT "." INT? | "." INT
+HEXDIGIT: /[a-fA-F]/ | DIGIT
+_EXP: ("e"|"E") SIGNED_INT
+FLOAT: INT _EXP | DECIMAL _EXP? // FLOAT: /[+-]?\d+(\.\d+)?([eE][+-]?\d+)?/
+SIGNED_FLOAT: /[+-]?/ FLOAT
+NUMBER: FLOAT | INT
+SIGNED_NUMBER: /[+-]?/ NUMBER
+
+// Miscellaneous
+COMMENT: "/*" /(.|\n)*?/ "*/" // C style /* comments */
+WS: /[\s\t\f\r\n]/+ // White Space
+
+
+%ignore WS
+%ignore COMMENT

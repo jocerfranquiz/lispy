@@ -1,0 +1,15 @@
+/* Basic math module */
+
+[def abs [value]
+    [if [< value 0]
+        [- value]
+        value
+    ]
+]
+
+[def square [x]
+    [* x x]
+]
+
+[var PI 3.141592653589793]
+
