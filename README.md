@@ -1,5 +1,5 @@
-# 🍵 tea_lang 
-Tiny programming language implemented over Python 3.10.6
+# 🍵 tea
+Minimal/Simple/Tiny programming language implemented over Python 3.10.6
 
 # Features
 - s-expression syntax (like Lisp)
@@ -14,12 +14,17 @@ Tiny programming language implemented over Python 3.10.6
 - create and import your own programs/modules on `.tea` files
 
 ```
-tl> + 2 2
+tea> + 2 2
 4
-tl> [~l x [* x x]] [3] /* lambda function */
+tea> [var i 10]
+tea> print i
+10
+tea> [lambda x [* x x]] [3] /* lambda function */
 9
-tl> [def [f x ] [print x]] [f 10]
+tea> [def [f x ] [print x]] [f 10]
 ```
+
+Check the tests folder for more examples
 
 # Requirements
 
