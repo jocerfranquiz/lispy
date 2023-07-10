@@ -9,7 +9,7 @@ from .utils.parser import parse
 
 REGEX_VAR_NAME = re.compile(r"^[+\-*/<>=\w]+$")
 FILE_EXTENSION = "lpy"
-VERSION_INFO = "lispy version 0.0.1 2023-07-06"
+VERSION_INFO = "tea version 0.0.1 2023-07-06"
 
 
 class Transformer:
