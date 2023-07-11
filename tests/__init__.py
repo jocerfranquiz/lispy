@@ -1,5 +1,5 @@
-from src.lispy import Lispy
+from src.tea import Tea
 
-lispy = Lispy()
+tea = Tea()
 
-compute = lispy.cmp
+compute = tea.cmp

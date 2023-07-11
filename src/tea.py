@@ -8,7 +8,7 @@ from typing import Hashable, Optional, Union
 from .utils.parser import parse
 
 REGEX_VAR_NAME = re.compile(r"^[+\-*/<>=\w]+$")
-FILE_EXTENSION = "lpy"
+FILE_EXTENSION = "tea"
 VERSION_INFO = "tea version 0.0.1 2023-07-06"
 
 
@@ -128,7 +128,7 @@ global_environment = Environment(
 )
 
 
-class Lispy:
+class Tea:
     # GLOBAL ENVIRONMENT
     def __init__(self, global_env: Environment = global_environment):
         self.global_env = global_env
