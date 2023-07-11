@@ -18,7 +18,7 @@ assert (
 [prop C x]
 """
     )
-    == 11
+    == "11"
 )
 
 assert (
@@ -43,7 +43,7 @@ assert (
 [[prop p calc] p]
 """
     )
-    == 30
+    == "30"
 )
 
 assert (
@@ -67,5 +67,5 @@ assert (
 [[prop p calc] p]
 """
     )
-    == 60
+    == "60"
 )

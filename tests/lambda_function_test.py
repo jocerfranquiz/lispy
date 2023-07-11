@@ -16,7 +16,7 @@ assert (
 ]
 """
     )
-    == 300
+    == "300"
 )
 assert (
     compute(
@@ -24,7 +24,7 @@ assert (
 [ [lambda [x] [* x x]] 2 ]
 """
     )
-    == 4
+    == "4"
 )
 assert (
     compute(
@@ -34,5 +34,5 @@ assert (
 [square 3]
 """
     )
-    == 9
+    == "9"
 )

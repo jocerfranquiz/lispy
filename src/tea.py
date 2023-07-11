@@ -2,14 +2,58 @@ import builtins
 import inspect
 import operator
 import os
-import re
-from typing import Hashable, Optional, Union
 
-from .utils.parser import parse
+# import re
+# from typing import Hashable, Optional, Union
 
-REGEX_VAR_NAME = re.compile(r"^[+\-*/<>=\w]+$")
+# from .utils.parser import parse
+
+# REGEX_VAR_NAME = re.compile(r"^[+\-*/<>=\w]+$")
 FILE_EXTENSION = "tea"
-VERSION_INFO = "tea version 0.0.1 2023-07-06"
+VERSION_INFO = "tea version 0.0.2 2023-07-11"
+
+
+class Parser:
+    @classmethod
+    def tokenize(cls, code):
+        """Transform code into a list object of tokens."""
+        return code.replace('[', ' [ ').replace(']', ' ] ').split()
+
+    @classmethod
+    def atomizer(cls, token):
+        """Numbers become numbers; every other token is a symbol."""
+        try:
+            return int(token)
+        except ValueError:
+            try:
+                return float(token)
+            except ValueError:
+                return str(token)
+
+    @classmethod
+    def to_list(cls, tokens):
+        """Convert a list of tokens into a "list" data structure"""
+
+        if len(tokens) == 0:
+            raise SyntaxError("Unexpected EOF")
+
+        token = tokens.pop(0)
+        if '[' == token:
+            _list = []
+            while tokens[0] != ']':
+                # Recursive deep down
+                _list.append(cls.to_list(tokens))
+            tokens.pop(0)  # pop off ']'
+            return _list
+        elif ']' == token:
+            raise SyntaxError('Unexpected token "]"')
+
+        return cls.atomizer(token)
+
+    @classmethod
+    def parse(cls, code):
+        """Parse a code expression."""
+        return cls.to_list(cls.tokenize(code))
 
 
 class Transformer:
@@ -71,8 +115,8 @@ class Transformer:
 class Environment:
     def __init__(
         self,
-        record: Union[None, dict],
-        parent: Union[None, Optional["Environment"]] = None,
+        record,
+        parent=None,
     ):
         if record is None:
             record = {}
@@ -80,21 +124,21 @@ class Environment:
         self.parent = parent
 
     # Define a new variable
-    def define(self, name: Hashable, value):
+    def define(self, name, value):
         self.record[name] = value
         return value
 
     # Assign a new variable
-    def assign(self, name: Hashable, value):
+    def assign(self, name, value):
         self.resolve(name).record[name] = value
         return value
 
     # Get the value of a variable
-    def lookup(self, name: Hashable):
+    def lookup(self, name):
         return self.resolve(name).record[name]
 
     # Get the environment in which a variable is defined
-    def resolve(self, name: Hashable):
+    def resolve(self, name):
         if name in self.record.keys():
             return self
         if self.parent is None:  # parent == None means we are in the global_env
@@ -108,57 +152,61 @@ global_environment = Environment(
         "true": True,
         "false": False,
         "VERSION": VERSION_INFO,
-        "+": lambda *args: operator.__pos__(args[0])
+        "+": lambda *args: operator.pos(args[0])
         if len(args) == 1
-        else operator.__add__(args[0], args[1]),
-        "*": operator.__mul__,
-        "-": lambda *args: operator.__neg__(args[0])
+        else operator.add(args[0], args[1]),
+        "*": operator.mul,
+        "-": lambda *args: operator.neg(args[0])
         if len(args) == 1
-        else operator.__sub__(args[0], args[1]),
-        "/": operator.__truediv__,
-        "//": operator.__floordiv__,
-        "%": operator.__mod__,
-        ">": operator.__gt__,
-        "<": operator.__lt__,
-        ">=": operator.__ge__,
-        "<=": operator.__le__,
-        "=": operator.__eq__,
-        "print": builtins.print,
+        else operator.sub(args[0], args[1]),
+        "/": operator.truediv,
+        "//": operator.floordiv,
+        "%": operator.mod,
+        ">": operator.gt,
+        "<": operator.lt,
+        ">=": operator.ge,
+        "<=": operator.le,
+        "=": operator.eq,
     }
 )
 
 
 class Tea:
     # GLOBAL ENVIRONMENT
-    def __init__(self, global_env: Environment = global_environment):
+    def __init__(self, global_env=global_environment):
         self.global_env = global_env
         self.transformer = Transformer()
 
+    def _output(self, expr):
+        """Convert expression back to s-expression."""
+
+        if not isinstance(expr, list):
+            return str(expr)
+        else:
+            return '[' + ' '.join(map(self._output, expr)) + ']'
+
     # Compute an expression -> cmp
     def cmp(self, raw_expr: str):
-        return self._eval_body(parse(f"[begin {raw_expr}]"), self.global_env)
+        return self._output(
+            self._eval_body(Parser.parse(f"[begin {raw_expr}]"), self.global_env)
+        )
 
-    def _eval(self, expr: Union[str, int, float, list], env: Environment):
+    def _eval(self, expr, env):
         if env is None:
             env = self.global_env
 
-        # TYPES
+        # VAR LOOKUP
         if isinstance(expr, str):
-            if expr[0] == '"' and expr[-1] == '"':
-                return expr[1:-1]
+            return env.lookup(expr)
 
-            # VAR LOOKUP
-            if bool(re.fullmatch(REGEX_VAR_NAME, expr)):
-                return env.lookup(expr)
-
-        elif isinstance(expr, int):
+        if isinstance(expr, int | float):
             return expr
 
-        elif isinstance(expr, float):
-            return expr
-        # TODO: complex
-
-        elif isinstance(expr, list):
+        if isinstance(expr, list):
+            # Quoted text
+            if expr[0] == "quote":
+                [_, string] = expr
+                return string
             # BLOCKS
             if expr[0] == "begin":
                 block_env = Environment({}, env)
@@ -290,7 +338,7 @@ class Tea:
                 with open(os.path.join(path, "modules", file), mode="r") as f:
                     module_src = f.read()
 
-                module_body = parse(f"[begin {module_src}]")
+                module_body = Parser.parse(f"[begin {module_src}]")
                 module_expr = ["module", module_name, module_body]
 
                 return self._eval(module_expr, self.global_env)

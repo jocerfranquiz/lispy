@@ -11,7 +11,7 @@ assert (
 ]
 """
     )
-    == 4
+    == "4"
 )
 assert (
     compute(
@@ -26,7 +26,7 @@ assert (
 [calc 10 20]
 """
     )
-    == 230
+    == "230"
 )
 # Closure test
 assert (
@@ -46,7 +46,7 @@ assert (
 [fn 30]
 """
     )
-    == 160
+    == "160"
 )
 assert (
     compute(
@@ -59,5 +59,5 @@ assert (
 [factorial 5]
 """
     )
-    == 120
+    == "120"
 )
