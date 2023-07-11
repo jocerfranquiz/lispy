@@ -13,6 +13,7 @@ Minimal/Simple/Tiny programming language implemented over Python 3.10.6
   - Modular
 - create and import your own programs/modules on `.tea` files
 
+TODO: **REPL**
 ```
 tea> + 2 2
 4
