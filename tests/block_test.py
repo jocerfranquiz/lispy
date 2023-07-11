@@ -10,7 +10,7 @@ assert (
 ]
 """
     )
-    == 230
+    == "230"
 )
 assert (
     compute(
@@ -25,7 +25,7 @@ assert (
 ]
 """
     )
-    == 10
+    == "10"
 )
 assert (
     compute(
@@ -42,7 +42,7 @@ assert (
     ]
 """
     )
-    == 20
+    == "20"
 )
 assert (
     compute(
@@ -55,7 +55,7 @@ assert (
     data
 ]"""
     )
-    == 100
+    == "100"
 )
 assert (
     compute(
@@ -67,5 +67,5 @@ assert (
 ]
 """
     )
-    == 120
+    == "120"
 )

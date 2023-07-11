@@ -21,7 +21,7 @@ assert (
 [[prop Math abs] [- 10]]
 """
     )
-    == 10
+    == "10"
 )
 
 assert (
@@ -31,7 +31,7 @@ assert (
 [_abs [- 10]]
 """
     )
-    == 10
+    == "10"
 )
 
 assert (
@@ -40,5 +40,5 @@ assert (
 [prop Math MAX_VALUE]
 """
     )
-    == 1000
+    == "1000"
 )
