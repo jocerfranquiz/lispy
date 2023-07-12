@@ -1,43 +1,39 @@
 # 🍵 tea
-Minimal/Simple/Tiny programming language implemented over Python 3.10.6
+Minimal/Simple/Tiny programming language implemented over Python 3.10.6.
+
+You can find the executable `tea` on the `dist` folder (for linux).
 
 # Features
-- s-expression syntax (like Lisp)
-- prefix notation (weird, I know, but the machine like it)
-- all the interpreter is one file (`tea.py`)
-- easy to learn
-- fast to type
-- multiparadigm!
+- Uses **S-expression syntax** (like Lisp) but with square brackets (faster to type)
+- Easy to learn
+- Prefix notation (weird, I know, but the machine like it)
+- The whole interpreter is one file (`tea.py`)
+- Multiparadigm!
   - OOP (with classes)
   - Functional (lambda functions)
   - Modular
-- create and import your own programs/modules on `.tea` files
+- Create and import your own programs/modules on `.tea` files (check the modules folder for examples)
 
 ```
-tea> + 2 2
-4
+$ ./dist/tea
+tea version 0.0.2 2023-07-11
+
+tea> [+ 1 2]
+3
 tea> [var i 10]
-tea> print i
 10
-tea> [lambda x [* x x]] [3] /* lambda function */
-9
-tea> [def [f x ] [print x]] [f 10]
+tea> i
+10
+tea> [ [lambda [x] [* x x]] 2 ]
+4
+tea> ^C
+No more tea for now. Goodbye...
 ```
 
 Check the tests folder for more examples
 
 # Requirements
+Nothing. Pure Python Standard Library magic!.
 
-|Package            |Version|
-|:------------------|:-----:|
-| exceptiongroup    | 1.1.1 |
-| iniconfig         | 2.0.0 |
-| lark              | 1.1.5 |
-| libcst            | 1.0.1 |
-| packaging         | 23.1  |
-| pluggy            | 1.0.0 |
-| pytest            | 7.3.1 |
-| PyYAML            | 6.0   |
-| tomli             | 2.0.1 |
-| typing-inspect    | 0.9.0 |
-| typing_extensions | 4.6.3 |
+Although, you can unse `pytest 7.3+` in case you want to run the tests.
+
