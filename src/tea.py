@@ -403,11 +403,57 @@ class Tea:
                 traceback.print_exc()
 
 
+def load(filename):
+    """
+    Load a program in filename, execute it, and start the repl. If an error occurs,
+    execution stops, and we are left in the repl. This function supports
+    multi-line code by merging lines until the parentheses match.
+    """
+    print(f"Loading and executing {filename}")  # load module code
+    file = f"{filename}"
+    path = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(path, file), mode="r") as f:
+        program = f.readlines()
+
+    rps = running_paren_sums(program)
+    full_line = ""
+
+    tea = Tea()
+    tea.repl()
+    for paren_sum, program_line in zip(rps, program):
+        program_line = program_line.strip()
+        full_line += program_line + " "
+        if paren_sum == 0 and full_line.strip() != "":
+            try:
+                val = tea.cmp(full_line)
+                if val is not None:
+                    print(val)
+            except Exception:
+                print(f"\nThe line in which the error occurred:\n{full_line}")
+                break
+            full_line = ""
+    tea.repl()
+
+
+def running_paren_sums(program):
+    """
+    Map the lines in the list program to a list whose entries contain
+    a running sum of the per-line difference between '[' and the number of ']'.
+    """
+
+    count_open_parens = lambda line: line.count("[") - line.count("]")
+    paren_counts = list(map(count_open_parens, program))
+    rps = []
+    total = 0
+    for paren_count in paren_counts:
+        total += paren_count
+        rps.append(total)
+    return rps
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        raise EOFError(
-            "No more tea for now. Sorry.\nFile loading not implemented yet. Goodbye...\n"
-        )
+        load(sys.argv[1])
     else:
         tea = Tea()
         tea.repl()
