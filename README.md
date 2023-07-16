@@ -1,7 +1,7 @@
 # 🍵 tea
 Minimal/Simple/Tiny programming language implemented over Python 3.10.6.
 
-You can find the executable `tea` on the `dist` folder (for linux).
+You can find the executable `tea` in the `dist` folder (for Linux, Windows will be included later).
 
 # Features
 - Uses **S-expression syntax** (like Lisp) but with square brackets (faster to type)
@@ -29,11 +29,10 @@ tea> [ [lambda [x] [* x x]] 2 ]
 tea> ^C
 No more tea for now. Goodbye...
 ```
-
-Check the tests folder for more examples
+You can load and execute `.tea` files: `$ ./tea <filename>`. Check the tests folder for more examples.
 
 # Requirements
-Nothing. Pure Python Standard Library magic!.
+Nothing. Pure Python Standard Library magic!
 
-Although, you can unse `pytest 7.3+` in case you want to run the tests.
+Although, you can use `pytest 7.3+` in case you want to run the tests.
 
